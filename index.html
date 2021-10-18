@@ -1,0 +1,78 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="main.js"></script>
+    
+    <link rel="stylesheet" href="index.css">
+    <title>Truth Table Generator</title>
+</head>
+    <body>
+        <div id="wholePage">
+            <div id="innerPage">
+                <h1>Truth Table Generator</h1>
+                <div class="inputLine" id="inputLine">
+                    <form id="booleanInputForm">
+                        <input id="booleanExpression" />
+                        <input type="submit" value="Draw Table"/>
+                    </form>
+                </div>
+                
+                <div id="tableOutput">
+                
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.getElementById("booleanInputForm").onsubmit = (e) => {
+                e.preventDefault();
+                let formula = document.getElementById("booleanExpression").value;
+                document.getElementById("booleanExpression").value = "";
+                console.log(formula);
+                let table = generateTruthTable(formula);
+                
+                document.getElementById("tableOutput").innerHTML = "";
+                let tableElement = document.createElement("table");
+                let headerRow = document.createElement("tr");
+                tableElement.appendChild(headerRow);
+
+                let cell;
+                for (let parameter of table.variables) {
+                    cell = document.createElement("th");
+                    cell.innerText = parameter;
+                    headerRow.appendChild(cell);
+                }
+                cell = document.createElement("th");
+                cell.innerText = formula;
+                headerRow.appendChild(cell);
+
+                let row;
+                for (let item of table.table) {
+                    console.log(item);
+                    row = document.createElement("tr");
+                    
+                    for (let variableValue of item.parameters) {
+                        cell = document.createElement("td");
+                        cell.innerText = variableValue;
+                        if (variableValue=="1") cell.style.background = "#80ff80";
+                        else cell.style.background = "#ff8c8c";
+                        row.appendChild(cell);
+                    }
+                    
+                    cell = document.createElement("td");
+                    cell.innerText = +item.value;
+                    if (item.value) cell.style.background = "#80ff80";
+                    else cell.style.background = "#ff8c8c";
+                    row.appendChild(cell);
+                    
+                    tableElement.appendChild(row);
+                }
+
+                document.getElementById("tableOutput").appendChild(tableElement);
+            }
+        </script>
+    </body>
+</html>

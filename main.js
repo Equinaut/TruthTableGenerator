@@ -1,4 +1,6 @@
 function evaluate(statement, values) { //Function that will evaluate a given statement with the values of each variable you supply
+    console.log(statement);
+
     statement = statement.replace(/\s+/g, ''); //Remove spaces
     if (statement.includes(")") || statement.includes("(")) { //Check if statement contains brackets (so needs to be broken down further)
         let lastOpenBracket = -1; //Last index of a open bracket [(]
@@ -29,7 +31,7 @@ function evaluate(statement, values) { //Function that will evaluate a given sta
             if (statement[0]=="¬") {
                 let operand = statement[1];
                 let value = undefined;
-                if (operand=="1" || operand=="0") firstValue = {0: true, 1: false}[operand];
+                if (operand=="1" || operand=="0") value = {0: true, 1: false}[operand];
                 else value = !Boolean(values[operand]);
                 return +value;
             } else {
@@ -78,7 +80,7 @@ function evaluate(statement, values) { //Function that will evaluate a given sta
 function generateTruthTable(statement) { //Generates the truth table for the supplied statement
     let args = statement.replace(/[^A-Z]/g, '');
 
-    let table = {};
+    let table = [];
 
     args = new Set(args);
     args = Array.from(args).join("");
@@ -97,8 +99,8 @@ function generateTruthTable(statement) { //Generates the truth table for the sup
         for (let j=0; j<args.length; j++) {
             arguments[args.slice(j, j+1)] = {1: true, 0: false}[values[j]]
         }
-        // console.log(values, evaluate(statement, arguments));
-        table[values] = Boolean(+evaluate(statement, arguments));
+        // table[values] = Boolean(+evaluate(statement, arguments));
+        table.push({parameters: values, value: Boolean(+evaluate(statement, arguments))});
     }
     return {variables: Array.from(args), table: table};
 }
