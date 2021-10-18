@@ -1,0 +1,2 @@
+# TruthTableGenerator
+Generates truth tables
