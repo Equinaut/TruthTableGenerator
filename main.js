@@ -102,5 +102,3 @@ function generateTruthTable(statement) { //Generates the truth table for the sup
     }
     return {variables: Array.from(args), table: table};
 }
-
-console.log(generateTruthTable("((¬P) v (¬Q))"));
