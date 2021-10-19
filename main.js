@@ -99,7 +99,6 @@ function generateTruthTable(statement) { //Generates the truth table for the sup
         for (let j=0; j<args.length; j++) {
             arguments[args.slice(j, j+1)] = {1: true, 0: false}[values[j]]
         }
-        // table[values] = Boolean(+evaluate(statement, arguments));
         table.push({parameters: values, value: Boolean(+evaluate(statement, arguments))});
     }
     return {variables: Array.from(args), table: table};
