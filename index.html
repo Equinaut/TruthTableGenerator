@@ -4,6 +4,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
+
     <script src="main.js"></script>
     
     <link rel="stylesheet" href="index.css">
@@ -14,8 +17,20 @@
             <div id="innerPage">
                 <h1>Truth Table Generator</h1>
                 <div class="inputLine" id="inputLine">
-                    <form id="booleanInputForm">
+                    <form id="booleanInputForm" autocomplete="off">
                         <input id="booleanExpression" />
+                        <div id="symbolButtons">
+                            <button type="button" onclick="addSymbol('P')">P</button>
+                            <button type="button" onclick="addSymbol('Q')">Q</button>
+                            <button type="button" onclick="addSymbol('R')">R</button>
+                            <button type="button" onclick="addSymbol('(')">(</button>
+                            <button type="button" onclick="addSymbol(')')">)</button>
+                            <button type="button" onclick="addSymbol('¬')">¬</button>
+                            <button type="button" onclick="addSymbol('v')">v</button>
+                            <button type="button" onclick="addSymbol('^')">^</button>
+                            <button type="button" onclick="addSymbol('⇒')">⇒</button>
+                            <button type="button" onclick="addSymbol('⇔')">⇔</button>
+                        </div>
                         <input type="submit" value="Draw Table"/>
                     </form>
                 </div>
@@ -27,6 +42,11 @@
         </div>
 
         <script>
+            function addSymbol(character) {
+                inputBox = document.getElementById("booleanExpression");
+                inputBox.value = inputBox.value + character;
+            }
+
             document.getElementById("booleanInputForm").onsubmit = (e) => {
                 e.preventDefault();
                 let formula = document.getElementById("booleanExpression").value;

@@ -1,3 +1,6 @@
+* {
+    font-family: 'Poppins', sans-serif;
+}
 body {
     width: 100%;
     height: 100%;
@@ -19,13 +22,34 @@ body {
     align-items: center;
 }
 
+form {
+    margin: 20px;
+}
+form>* {
+    padding: 10px 0;
+}
+
+#symbolButtons {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+#symbolButtons * {
+    flex-basis: 15%;
+    flex-shrink: 1;
+    font-size: 1.5em;
+    border-radius: 0.5em;
+    margin: 0.2em;
+}
+
 input {
     width: 100%;
     font-size: 2em;
     padding: 1em;
     border-radius: 1.5em;
     border: solid black;
-    margin: 20px;
 }
 
 #tableOutput {
@@ -37,6 +61,12 @@ table, th, td {
     font-size: 1.5em;
     padding: 0.5em;
 }
+
+th {
+    position: sticky;
+    top: 0;
+}
+
 table {
     margin: 0 auto;
     border-radius: 20px;
