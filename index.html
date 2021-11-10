@@ -44,7 +44,11 @@
         <script>
             function addSymbol(character) {
                 inputBox = document.getElementById("booleanExpression");
-                inputBox.value = inputBox.value + character;
+                let positionStart = inputBox.selectionStart;
+                let positionEnd = inputBox.selectionEnd;
+                inputBox.value = inputBox.value.substring(0, positionStart) + character + inputBox.value.substring(positionEnd, inputBox.value.length);
+                inputBox.focus();
+                inputBox.setSelectionRange(positionStart + 1, positionStart + 1);
             }
 
             document.getElementById("booleanInputForm").onsubmit = (e) => {
