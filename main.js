@@ -1,6 +1,4 @@
 function evaluate(statement, values) { //Function that will evaluate a given statement with the values of each variable you supply
-    console.log(statement);
-
     statement = statement.replace(/\s+/g, ''); //Remove spaces
     if (statement.includes(")") || statement.includes("(")) { //Check if statement contains brackets (so needs to be broken down further)
         let lastOpenBracket = -1; //Last index of a open bracket [(]
@@ -82,7 +80,7 @@ function generateTruthTable(statement) { //Generates the truth table for the sup
 
     let table = [];
 
-    args = new Set(args);
+    args = new Set(Array.from(args).sort());
     args = Array.from(args).join("");
 
     let argIndexes = {};
