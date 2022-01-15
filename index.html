@@ -31,7 +31,10 @@
                             <button type="button" onclick="addSymbol('⇒')">⇒</button>
                             <button type="button" onclick="addSymbol('⇔')">⇔</button>
                         </div>
-                        <input type="submit" value="Draw Table"/>
+                        <div id="submitButtons">
+                            <input type="submit" value="Add to Table"/>
+                            <input type="button" value="Clear Table" onclick="clearTable()"/>
+                        </div>
                     </form>
                 </div>
                 
@@ -51,16 +54,21 @@
                 inputBox.setSelectionRange(positionStart + 1, positionStart + 1);
             }
 
-            document.getElementById("booleanInputForm").onsubmit = (e) => {
-                e.preventDefault();
-                let formula = document.getElementById("booleanExpression").value;
-                document.getElementById("booleanExpression").value = "";
-                console.log(formula);
-                let table = generateTruthTable(formula);
-                
+            let formulas = [];
+
+            function clearTable() {
+                formulas = [];
                 document.getElementById("tableOutput").innerHTML = "";
+            }
+
+            function drawTable(formulas) {
+                table = generateTruthTable(formulas);
+                document.getElementById("tableOutput").innerHTML = "";
+                if (formulas.length === 0) return;
+
                 let tableElement = document.createElement("table");
                 let headerRow = document.createElement("tr");
+                headerRow.id = "headerRow";
                 tableElement.appendChild(headerRow);
 
                 let cell;
@@ -69,32 +77,95 @@
                     cell.innerText = parameter;
                     headerRow.appendChild(cell);
                 }
-                cell = document.createElement("th");
-                cell.innerText = formula;
-                headerRow.appendChild(cell);
+                for (let [index, formula] of table.formulas.entries()) {
+                    cell = document.createElement("th");
+                    cell.classList.add("statement");
+                    cell.setAttribute("index", index);
+                    cell.setAttribute("contentEditable", true);
+
+                    cell.onkeydown = (event) => {
+                        if (event.key === "Enter") {
+                            event.preventDefault();
+                            let cell = document.querySelector(".statement[index='" + index.toString() + "']");
+                            let newValue = cell.innerText;
+                            cell.blur();
+                            if (newValue === "") formulas.splice(index, 1);
+                            else formulas[index] = newValue;
+                            drawTable(formulas);
+
+                        } else if (event.key === "Escape") {
+                            let cell = document.querySelector(`.statement[index='${index.toString()}']`);
+                            cell.blur();
+
+                        } else if (event.key === "Delete") {
+                            event.preventDefault();
+                            let cell = document.querySelector(`.statement[index='${index.toString()}']`);
+                            cell.blur();
+                            formulas.splice(index, 1);
+                            drawTable(formulas);
+
+                        } else if (event.ctrlKey && event.key === "ArrowLeft") {
+                            event.preventDefault();
+                            if (index <= 0) return;
+                            [formulas[index], formulas[index - 1]] = [formulas[index - 1], formulas[index]];
+                            drawTable(formulas);
+                            document.querySelector(`.statement[index='${(index - 1).toString()}']`).focus();
+
+                        } else if (event.ctrlKey && event.key === "ArrowRight") {
+                            event.preventDefault();
+                            if (index >= formulas.length - 1) return;
+                            [formulas[index], formulas[index + 1]] = [formulas[index + 1], formulas[index]];
+                            drawTable(formulas);
+                            document.querySelector(`.statement[index='${(index + 1).toString()}']`).focus();
+
+
+                        } else if (event.altKey && event.key === "ArrowLeft") {
+                            event.preventDefault();
+                            if (index <= 0) return;
+                            document.querySelector(`.statement[index='${(index - 1).toString()}']`).focus();
+
+                        } else if (event.altKey && event.key === "ArrowRight") {
+                            event.preventDefault();
+                            if (index >= formulas.length - 1) return;
+                            document.querySelector(`.statement[index='${(index + 1).toString()}']`).focus();
+                        }
+                    }
+
+                    cell.innerText = formula;
+                    headerRow.appendChild(cell);
+                }
 
                 let row;
                 for (let item of table.table) {
                     row = document.createElement("tr");
-                    
+
                     for (let variableValue of item.parameters) {
                         cell = document.createElement("td");
                         cell.innerText = variableValue;
-                        if (variableValue=="1") cell.style.background = "#80ff80";
+                        if (variableValue == "1") cell.style.background = "#80ff80";
                         else cell.style.background = "#ff8c8c";
                         row.appendChild(cell);
                     }
-                    
-                    cell = document.createElement("td");
-                    cell.innerText = +item.value;
-                    if (item.value) cell.style.background = "#80ff80";
-                    else cell.style.background = "#ff8c8c";
-                    row.appendChild(cell);
-                    
+
+                    for (let value of item.values) {
+                        cell = document.createElement("td");
+                        cell.innerText = +value;
+                        if (value) cell.style.background = "#80ff80";
+                        else cell.style.background = "#ff8c8c";
+                        row.appendChild(cell);
+                    }
+
                     tableElement.appendChild(row);
                 }
 
                 document.getElementById("tableOutput").appendChild(tableElement);
+            }
+
+            document.getElementById("booleanInputForm").onsubmit = (e) => {
+                e.preventDefault();
+                formulas.push(document.getElementById("booleanExpression").value);
+                document.getElementById("booleanExpression").value = "";
+                drawTable(formulas);
             }
         </script>
     </body>

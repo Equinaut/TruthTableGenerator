@@ -10,9 +10,7 @@ function evaluate(statement, values) { //Function that will evaluate a given sta
                 if (value==0 || value==1) {
                     statement = statement.slice(0, lastOpenBracket)+value.toString()+statement.slice(i+1, statement.length);
 
-                    if (statement.length==1) { //A single letter or literal so the statement has been solved
-                        return statement;
-                    }
+                    if (statement.length == 1) return statement; //A single letter or literal so the statement has been solved  
                     else {
                         let value = evaluate(statement, values); //Otherwise evaluate the remaining statement (recursion)
                         return value;
@@ -75,13 +73,15 @@ function evaluate(statement, values) { //Function that will evaluate a given sta
 }
 
 
-function generateTruthTable(statement) { //Generates the truth table for the supplied statement
-    let args = statement.replace(/[^A-Z]/g, '');
+function generateTruthTable(statements) { //Generates the truth table for the supplied statement
+    let args = new Set();
+    let table = new Array();
 
-    let table = [];
+    for (let statement of statements) {
+        for (let char of statement.replace(/[^A-Z]/g, '')) args.add(char);
+    }
 
-    args = new Set(Array.from(args).sort());
-    args = Array.from(args).join("");
+    args = Array.from(args).sort().join("");
 
     let argIndexes = {};
     let i = 0;
@@ -90,14 +90,20 @@ function generateTruthTable(statement) { //Generates the truth table for the sup
     }
     
     for (let i=0; i<Math.pow(2, args.length); i++) {
-        values = (i).toString(2);
-        while (values.length<args.length) values = "0"+values;
+        parameters = (i).toString(2);
+        while (parameters.length < args.length) parameters = "0" + parameters;
 
         let arguments = {};
         for (let j=0; j<args.length; j++) {
-            arguments[args.slice(j, j+1)] = {1: true, 0: false}[values[j]]
+            arguments[args.slice(j, j + 1)] = { 1: true, 0: false }[parameters[j]]
         }
-        table.push({parameters: values, value: Boolean(+evaluate(statement, arguments))});
+        values = [];
+        for (let statement of statements) values.push(Boolean(+evaluate(statement, arguments)));
+        table.push({parameters: parameters, values: values});
     }
-    return {variables: Array.from(args), table: table};
+    return {
+        variables: Array.from(args), 
+        table: table, 
+        formulas: statements
+    };
 }

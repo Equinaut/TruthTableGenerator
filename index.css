@@ -1,5 +1,6 @@
 * {
     font-family: 'Poppins', sans-serif;
+    text-align: center;
 }
 body {
     width: 100%;
@@ -44,7 +45,11 @@ form>* {
     margin: 0.2em;
 }
 
-input {
+#submitButtons {
+    display: flex;
+}
+
+#booleanExpression, #submitButtons * {
     width: 100%;
     font-size: 2em;
     padding: 1em;
@@ -54,6 +59,10 @@ input {
 
 #tableOutput {
     width: 100%;
+}
+th input {
+    font-size: 1.5em;
+    margin: 0;
 }
 table, th, td {
     background: white;
